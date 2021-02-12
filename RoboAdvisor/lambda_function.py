@@ -40,29 +40,30 @@ def validate_data(age, investment_amount, intent_request):
     """
     Validates the data provided by the user.
     """
-    age = parse_int(age)
-    if age < 0 or age >= 65:
-        
-        return build_validation_result(
-            False,
-            "age",
-            "You should be currently living and less than 65 years old to use this service, "
-            "please provide a different age."
-        )
+    if age is not None:
+        age = parse_int(age)
+        if age < 0 or age >= 65:
+            
+            return build_validation_result(
+                False,
+                "age",
+                "You should be currently living and less than 65 years old to use this service, "
+                "please provide a different age."
+            )
     
     # Validate the investment amount, it should be > 5000
-    investment_amount = parse_float(investment_amount)
-    if investment_amount < 5000:
-        return build_validation_result(
-            False,
-            "investmentAmount",
-            "The amount to invest should be greater than $5000, "
-            "please provide a different invest amount."
-        )
+    if investment_amount is not None:
+        investment_amount = parse_float(investment_amount)
+        if investment_amount < 5000:
+            return build_validation_result(
+                False,
+                "investmentAmount",
+                "The amount to invest should be greater than $5000, "
+                "please provide a different invest amount."
+            )
 
     
     # A True results is returned if age or amount are valid
-    print('Passed Validation')
     return build_validation_result(True, None, None)
 
 
@@ -141,7 +142,6 @@ def recommend_portfolio(intent_request):
         # Gets all the slots
         slots = get_slots(intent_request)
         
-        print('begin validate')
         validation_result = validate_data(age, investment_amount,intent_request)
         
         if not validation_result["isValid"]:
@@ -218,4 +218,3 @@ def lambda_handler(event, context):
     """
 
     return dispatch(event)
-
